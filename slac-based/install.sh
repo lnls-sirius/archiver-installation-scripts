@@ -13,30 +13,35 @@ function cleanup {
 trap cleanup EXIT
 
 cleanup
-
 mkdir -p resources
-pushd resources
-wget ${TOMCAT_URL}
-tar -zxf ${TOMCAT_DISTRIBUTION}.tar.gz
-export TOMCAT_HOME=$(pwd)/${TOMCAT_DISTRIBUTION} 
-wget https://dev.mysql.com/get/Downloads/Connector-J/${MYSQL_CONNECTOR}.tar.gz --no-check-certificate
-tar -xvf ${MYSQL_CONNECTOR}.tar.gz
-mv ${MYSQL_CONNECTOR}/${MYSQL_CONNECTOR}-bin.jar .
-popd 
 
-MSG="Wish to clone and build epicsappliances repo?"
+MSG="Wish to download the required files?"
 echo ${MSG}
 zenity --text="${MSG}" --question --width=$W --height=150
 if [[ $? == 0 ]] ; then
-        pushd resources
-        git clone ${ARCHIVER_REPO}
-        cd epicsarchiverap
-        ant
-        popd
+
+	pushd resources
+	wget ${TOMCAT_URL}
+	tar -zxf ${TOMCAT_DISTRIBUTION}.tar.gz
+	export TOMCAT_HOME=$(pwd)/${TOMCAT_DISTRIBUTION} 
+	wget https://dev.mysql.com/get/Downloads/Connector-J/${MYSQL_CONNECTOR}.tar.gz --no-check-certificate
+	tar -xvf ${MYSQL_CONNECTOR}.tar.gz
+	mv ${MYSQL_CONNECTOR}/${MYSQL_CONNECTOR}-bin.jar .
+	popd 
+	
+	MSG="Wish to clone and build epicsappliances repo?"
+	echo ${MSG}
+	zenity --text="${MSG}" --question --width=$W --height=150
+	if [[ $? == 0 ]] ; then
+	        pushd resources
+	        git clone ${ARCHIVER_REPO}
+	        cd epicsarchiverap
+	        ant
+	        popd
+	fi
 fi
 
-MSG=$(pwd)/resources
-MSG="Where is the epicsappliances build file (tar.gz)? Should be on the folder ${MSG}"
+MSG="Where is the epicsappliances build file (tar.gz)? Try the resources folder ..."
 echo $MSG
 ARCH_TAR=$(zenity  --title "$MSG" --file-selection --width=$W --height=150)
 if [[ ! -f ${ARCH_TAR} ]]
@@ -79,6 +84,8 @@ do
 	# sed -i -e "43a<user username=\"${TOMCAT_USERNAME}\" password=\"${TOMCAT_PASSWORD}\" roles=\"manager-gui\"/>" ${TOMCAT_USERS}
 	# sed -i -e "43a<role rolename=\"manager-gui\"/>" ${TOMCAT_USERS} 
         if [ $APPLIANCE_UNIT == "mgmt" ]; then
+                UI_DIR=${DEPLOY_DIR}/${APPLIANCE_UNIT}/webapps/mgmt/ui
+		IMG_DIR=${UI_DIR}/comm/img
                 for file in "appliance.html" "cacompare.html" "index.html" "integration.html" "metrics.html" "pvdetails.html" "redirect.html" "reports.html" "storage.html"
                 do
                         sed -i "s/LCLS/LNLS/g" ${UI_DIR}/${file}

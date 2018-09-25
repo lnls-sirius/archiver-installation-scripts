@@ -50,6 +50,17 @@ then
 	exit 1
 fi
 
+MSG="Pick a folder (preferably empty) where the appliances.xml and policies.py files will be stored."
+echo $MSG
+SETTINGS_FOLDER=$(zenity  --title "$MSG" --directory --file-selection --width=$W --height=150)
+if [[ ! -d ${SETTINGS_FOLDER} ]]
+then
+	MSG="${SETTINGS_FOLDER} does not seem to be a folder"
+	echo ${MSG}
+	zenity --text="${MSG}" --error --width=$W --height=150 --width=$W --height=150
+	exit 1
+fi
+
 MSG="Where's the Tomcat distribution (tar.gz)?"
 echo $MSG
 TOMCAT_DISTRIBUTION=$(zenity  --title "$MSG" --file-selection --width=$W --height=150)
@@ -174,11 +185,11 @@ else
 	fi
 fi
 
-cp lnls_appliances.xml ${DEPLOY_DIR}
-cp lnls_policies.py ${DEPLOY_DIR}
+cp lnls_appliances.xml ${SETTINGS_FOLDER}
+cp lnls_policies.py ${SETTINGS_FOLDER}
 
-export ARCHAPPL_APPLIANCES=${DEPLOY_DIR}/${APPLIANCES_NAME}
-SITE_SPECIFIC_POLICIES_FILE=${DEPLOY_DIR}/${POLICIES_NAME}
+export ARCHAPPL_APPLIANCES=${SETTINGS_FOLDER}/${APPLIANCES_NAME}
+SITE_SPECIFIC_POLICIES_FILE=${SETTINGS_FOLDER}/${POLICIES_NAME}
 
 # Change all addresses in lnls_appliances.xml and context.xml
 sed -i "s/APPLIANCE_ADDRESS/${APPLIANCE_ADDRESS}/g" ${ARCHAPPL_APPLIANCES}

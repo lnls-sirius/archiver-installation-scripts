@@ -1,0 +1,17 @@
+[Unit]
+Description=EPICS PV Gateway
+Wants=network-online.target
+After=network-online.target
+
+
+[Service]
+Restart=always
+RestartSec=5
+Type=simple
+WorkingDirectory=/scripts
+ExecStart=/bin/bash /scripts/run-gateway.sh
+StandardOutput=syslog
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target

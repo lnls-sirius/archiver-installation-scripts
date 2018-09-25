@@ -1,0 +1,11 @@
+<appliances>
+  <appliance>
+     <identity>ARCHAPPL_MYIDENTITY</identity>
+     <cluster_inetport>APPLIANCE_ADDRESS:12000</cluster_inetport>
+     <mgmt_url>https://APPLIANCE_ADDRESS:11995/mgmt/bpl</mgmt_url>
+     <engine_url>http://APPLIANCE_ADDRESS:11996/engine/bpl</engine_url>
+     <etl_url>http://APPLIANCE_ADDRESS:11997/etl/bpl</etl_url>
+     <retrieval_url>http://APPLIANCE_ADDRESS:11998/retrieval/bpl</retrieval_url>
+     <data_retrieval_url>http://APPLIANCE_ADDRESS:11998/retrieval</data_retrieval_url>
+  </appliance>
+</appliances>

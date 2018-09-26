@@ -1,9 +1,6 @@
 #!/bin/bash
 source /opt/envs.env
 
-mkdir -p /scripts
-cp run-gatway.sh /scripts/run-gatway.sh
-
 cd ${EPICS_MODULES}
 wget https://github.com/epics-extensions/ca-gateway/archive/R2-1-0-0.tar.gz --no-check-certificate
 tar -xvzf R2-1-0-0.tar.gz

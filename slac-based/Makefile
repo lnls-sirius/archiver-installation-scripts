@@ -8,7 +8,7 @@ SERVICE_FILE_DEST = /etc/systemd/system
 install:
 	mkdir -p /scripts
 	cp run-archiver.sh /scripts/run-archiver.sh
-	cp --preserve=mode ${SRC_SERVICE_FILE} ${SERVICE_FILE_DEST}
+	cp -f --preserve=mode ${SRC_SERVICE_FILE} ${SERVICE_FILE_DEST}
 	systemctl daemon-reload
 	systemctl stop ${SERVICE_NAME}
 	systemctl start ${SERVICE_NAME}

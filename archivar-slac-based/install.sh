@@ -98,12 +98,19 @@ do
                 cp -f labLogo2.png ${IMG_DIR}
         fi
         if [ $APPLIANCE_UNIT == "retrieval" ]; then
+                cp -f redirect.html ${DEPLOY_DIR}/${APPLIANCE_UNIT}/webapps/retrieval/ui/redirect.html
+                
+                pushd ${DEPLOY_DIR}/${APPLIANCE_UNIT}/webapps/retrieval/WEB-INF/
+                xmlstarlet ed --subnode "/web-app" --type elem -n welcome-file-list -v "" web.xml
+                xmlstarlet ed --subnode "/web-app/welcome-file-list" --type elem -n welcome-file -v "/ui/redirect.html" web.xml
+                popd
+
                 pushd ${DEPLOY_DIR}/${APPLIANCE_UNIT}/webapps/retrieval/ui
                 rm -rvfd viewer
                 git clone ${ARCHIVER_VIEWER_REPO}
                 mv archiver-viewer viewer
                 mv viewer/index.html viewer/archViewer.html
-                pushd viewer/js
+                pushd archiver-viewer/js
                 sed -i "s/10\.0\.4\.57\:11998/10\.0\.6\.51\:17668/g" archiver-viewer.min.js
                 sed -i "s/10\.0\.6\.57\:11998/10\.0\.6\.51\:17668/g" archiver-viewer.min.js
                 sed -i "s/10\.0\.4\.57\:11998/10\.0\.6\.51\:17668/g" archiver-viewer.js
@@ -112,3 +119,12 @@ do
                 popd
         fi
 done
+
+
+
+
+
+<welcome-file-list>
+        <welcome-file>/ui/redirect.html</welcome-file>
+    </welcome-file-list>
+

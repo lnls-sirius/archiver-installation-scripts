@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export APPLIANCE_ADDRESS="10.0.6.51"
+export APPLIANCE_ADDRESS="127.0.0.1"
 export ARCHAPPL_MYIDENTITY="lnls_appliance_1"
 export APPLIANCES_NAME="lnls_appliances.xml"
 export POLICIES_NAME="lnls_policies.py"

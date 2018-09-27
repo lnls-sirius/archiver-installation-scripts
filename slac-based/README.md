@@ -7,8 +7,8 @@ It's needed to have MySql running with the user and database already created.
 Usually only one instance of the Archiver Appliance will run. Assuming that is the case, for security reasons
 one should block the acces of the mgmt container (tomcat container) allowing only trusted IPs.<br>
 
-For a simple setup where a reverse proxy server is running on the same machine as the appliance, a simple solution if to set the archiver ip to 
-`127.0.0.1`, restrict the acces to the mgmt port, in this particular example `17665`, and reverse proxy to `127.0.0.1` with a secure connection, preferably using some sort of authentication:<br>
+For a simple setup where a reverse proxy server is running on the same machine as the appliance, a simple solution is to set the archiver ip to 
+`127.0.0.1` on the appliances.xml file ( `<mgmt_url>http://127.0.0.1:17665/mgmt/bpl</mgmt_url>` ), restrict the acces to the mgmt port, in this particular example `17665`, and reverse proxy to `127.0.0.1` with a secure connection, preferably using some sort of authentication:<br>
 `iptables -I INPUT 1 -p tcp --dport 17665 ! -s 127.0.0.1 -j REJEC`
 
 The package iptables-persistent on Ubuntu and Debian facilitates to reapply firewall rules at boot time.<br>

@@ -3,6 +3,23 @@ Based on the installation script provided by <href>https://github.com/slacmshank
 Make sure to have an `envs.env` file at `/opt`. View the example file on this project for a refference implementation.<br>
 It's needed to have MySql running with the user and database already created.
 
+## Storage
+Short term storage should be a ram disk for optmal performance. One should use tempfs and specify ther limit size according to the system setup.
+/epics-archiver-storage/sts/ as an example: 
+
+Edit the file `/etc/fstab` in order do mount the partitions on boot. Remember to backup the original file in case something goes wrong.
+As an example here is a second hardrive and a tmpfs used on a testing appliance.
+```
+UUID=d9d94512-346b-4b1d-a59d-b8abf9bdbbdc /epics-archiver-storage/lts/ ext4    errors=remount-ro 0       1
+none                                 /epics-archiver-storage/sts/            tmpfs    defaults, size=20480              0       0
+```
+
+For testing purposes one can simply do: <br>
+```
+mkdir /epics-archiver-storage/sts/
+mount -t tmpfs -o size=20480m tmpfs /epics-archiver-storage/sts/
+```
+
 ## Security Measures
 Usually only one instance of the Archiver Appliance will run. Assuming that is the case, for security reasons
 one should block the acces of the mgmt container (tomcat container) allowing only trusted IPs.<br>

@@ -11,6 +11,8 @@ TOMCAT_USERNAME=admin
 TOMCAT_PASSWORD=admin
 
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
+# # Use this if runnig inside a  Docker container
+#export JAVA_OPTS=-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
 export JAVA_OPTS="-XX:MaxPermSize=128M -XX:+UseG1GC -Xmx8G -Xms8G -ea"
 export PATH=${JAVA_HOME}/bin:$PATH
 

@@ -1,13 +1,14 @@
 PREFIX ?= /usr/local
 
-SERVICE_NAME = archiver
+SERVICE_NAME = beast
 SRC_SERVICE_FILE = ${SERVICE_NAME}.service
 SERVICE_FILE_DEST = /etc/systemd/system
 
-.PHONY: install uninstall
-install:
+.PHONY: install-beast
+
+install-beast:
 	mkdir -p /scripts
-	cp run-archiver.sh /scripts/run-archiver.sh
+	cp run-beast.sh /scripts/run-beast.sh
 	cp -f --preserve=mode ${SRC_SERVICE_FILE} ${SERVICE_FILE_DEST}
 	systemctl daemon-reload
 	systemctl stop ${SERVICE_NAME}

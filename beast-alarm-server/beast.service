@@ -1,0 +1,17 @@
+[Unit]
+Description=BEAST Alarm Server
+Wants=postgresql.service
+After=postgresql.service
+
+
+[Service]
+Restart=always
+RestartSec=5
+Type=simple
+WorkingDirectory=/scripts
+ExecStart=/bin/bash /scripts/run-beast.sh
+StandardOutput=syslog
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target

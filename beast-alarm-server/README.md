@@ -7,27 +7,20 @@ Remember to set the correct values at `LNLS-CON.ini`.<br>
 Modify the hostnames according to your setup.
 
 ```
-.
-.
-.
+...
 org.csstudio.alarm.beast/rdb_url=jdbc:postgresql://alarm-server-postgres-db:5432/lnls_alarms
-.
-.
-.
-
+...
 org.csstudio.alarm.beast/jms_url=failover:(tcp://alarm-server-activemq:61616)
-.
-.
-.
+...
 org.csstudio.platform.libs.epics/addr_list=10.0.6.49
-.
-.
-.
+...
 ```
 
 ## Server notifier
 Based on <href>https://github.com/lnls-sirius/docker-alarm-server.git</href>.<br>
-Remember to set the correct values at `beast-alarm-server/docker-alarm-server/configuration/LNLS-CON.ini`.
+Remember to set the correct values at `beast-alarm-server/LNLS-CON.ini`.
+
+Run the script `install-notifier.sh`  then  `make install-alarm-notifier`.
 
 ## Apache ActiveMQ
 Apache ActiveMQ ™ is the most popular and powerful open source messaging and Integration Patterns server.<br>
@@ -42,6 +35,9 @@ sudo systemctl stop activemq.service
 sudo systemctl enable activemq.service
 ```
 Based on <href>https://github.com/lnls-sirius/docker-alarm-activemq.git</href><br>
+
+
+
 ## Database configuration
 Based on <href>https://github.com/lnls-sirius/docker-alarm-postgres-db</href>.<br>
 

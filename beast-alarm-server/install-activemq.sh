@@ -1,4 +1,8 @@
 #!/bin/bash
+if [ ! -d /scripts ]; then
+    mkdir -p /scripts
+fi
+
 cp activemq.env /scripts/activemq.env
 source /scripts/activemq.env
 

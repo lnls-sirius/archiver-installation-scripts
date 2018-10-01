@@ -1,5 +1,5 @@
 [Unit]
-Description=BEAST Alarm Server
+Description=Alarm Notifier
 Wants=postgresql.service activemq.service
 After=postgresql.service activemq.service
 
@@ -9,7 +9,7 @@ Restart=always
 RestartSec=5
 Type=simple
 WorkingDirectory=/scripts
-ExecStart=/bin/bash /scripts/run-beast.sh
+ExecStart=/bin/bash /scripts/run-alarm-notifier.sh
 StandardOutput=syslog
 StandardError=syslog
 

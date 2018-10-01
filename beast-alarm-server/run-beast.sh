@@ -1,6 +1,6 @@
 #!/bin/bash
 source /scripts/beast.env
-source
+
 # Temporary data file
 DATA=/tmp/${PROGRAM}.$$
 
@@ -25,8 +25,8 @@ fi
 
 # Waits for database and ActiveMQ to be ready before lauching server
 pushd /opt/wait-for-it/
-echo "Waiting for ActiveMQ"
-./wait-for-it.sh -t 0 -p 61616 -h ${ACTIVEMQ_HOST}
+	echo "Waiting for ActiveMQ"
+	./wait-for-it.sh -t 0 -p 61616 -h ${ACTIVEMQ_HOST}
 popd
 
 pg_isready -h ${POSTGRESQL_HOST} -p ${POSTGRESQL_PORT}

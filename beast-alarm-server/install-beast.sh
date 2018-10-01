@@ -1,4 +1,8 @@
 #!/bin/bash
+if [ ! -d /scripts ]; then
+    mkdir -p /scripts
+fi
+
 cp beast.env /scripts/beast.env
 source /scripts/beast.env
 

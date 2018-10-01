@@ -14,7 +14,7 @@ $ docker run -d -p 9000:9000 --name portainer --restart always -v /var/run/docke
 
 ## Secure Portainer using SSL
 
-As we are running NGINX on the same host as portainer, we can use ssl on the proxy side. Still:
+As we are running NGINX on the same host as portainer, we can use ssl on the proxy side. Still one can configured ssl directly at:
 
 By default, Portainer’s web interface and API is exposed over HTTP. This is not secured, it’s recommended to enable SSL in a production environment.
 
@@ -43,3 +43,7 @@ To view the configured rules:<br>
 
 To persist the iptables rules after reboot, run dpkg-reconfigure and respond Yes when prompted.<br>
 `dpkg-reconfigure iptables-persistent`
+
+## Reverse Proxy
+
+NGINX is already configured to support Portainer at port 9000.

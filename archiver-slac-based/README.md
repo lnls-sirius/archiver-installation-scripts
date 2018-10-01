@@ -31,7 +31,7 @@ Pay attention on the messages that will prompt and select the corresponding file
 
 
 ## Storage
-Short term storage should be a ram disk for optmal performance. One should use tempfs and specify ther limit size according to the system setup.
+Short term storage should be a ram disk for optmal performance. One should use tempfs and specify the size limit according to the system setup.
 /epics-archiver/storage/sts/ as an example: 
 
 Edit the file `/etc/fstab` in order do mount the partitions on boot. Remember to backup the original file in case something goes wrong.

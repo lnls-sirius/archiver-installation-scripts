@@ -4,7 +4,7 @@ if [ ! -d /scripts ]; then
 fi
 
 cp alarm-notifier.env /scripts/alarm-notifier.env
-source alarm-notifier.env
+source /scripts/alarm-notifier.env
 
 # Update image and install required packages
 apt-get -y update && apt-get install -y git maven postgresql-client

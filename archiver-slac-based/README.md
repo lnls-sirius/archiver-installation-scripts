@@ -3,6 +3,33 @@ Based on the installation script provided by <href>https://github.com/slacmshank
 Make sure to have an `envs.env` file at `/opt`. View the example file on this project for a refference implementation.<br>
 It's needed to have MySql running with the user and database already created.
 
+## Installing
+
+Before installing the archiver service, the user might want to change some variables at `envs.env`, for example :
+```
+...
+export APPLIANCE_ADDRESS="127.0.0.1"
+export ARCHAPPL_MYIDENTITY="lnls_appliance_1"
+export APPLIANCES_NAME="lnls_appliances.xml"
+export POLICIES_NAME="lnls_policies.py"
+...
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
+...
+#export JAVA_OPTS=-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap # Use when inside a docker container
+export JAVA_OPTS="-XX:MaxPermSize=128M -XX:+UseG1GC -Xmx8G -Xms8G -ea"
+...
+APPLIANCE_STORAGE_FOLDER=/epics-archiver/storage 
+...
+```
+
+After configuring all the necessary items, run:
+```
+./install.sh
+```
+A temporary folder called <b>resources</b> will be created inside this folder during the installation process. All downloaded files will go there.
+Pay attention on the messages that will prompt and select the corresponding files. <i>A fully automated installation is under development alogside it's container counterpart</i>.
+
+
 ## Storage
 Short term storage should be a ram disk for optmal performance. One should use tempfs and specify ther limit size according to the system setup.
 /epics-archiver/storage/sts/ as an example: 
@@ -23,6 +50,12 @@ mount -t tmpfs -o size=20480m tmpfs /epics-archiver/storage/sts/
 ## Security Measures
 Usually only one instance of the Archiver Appliance will run. Assuming that is the case, for security reasons
 one should block the acces of the mgmt container (tomcat container) allowing only trusted IPs.<br>
+
+Check if Postgresql is listening on <b>0.0.0.0</b> and <b>not</b> on <b>localhost</b>.
+```
+sudo netstat -ae | grep tcp | grep LIST
+```
+
 
 For a simple setup where a reverse proxy server is running on the same machine as the appliance, a simple solution is to set the archiver ip to 
 `127.0.0.1` on the appliances.xml file ( `<mgmt_url>http://127.0.0.1:17665/mgmt/bpl</mgmt_url>` ), restrict the acces to the mgmt port, in this particular example `17665`, and reverse proxy to `127.0.0.1` with a secure connection, preferably using some sort of authentication(Remember to change `! --uid-owner controle` according to the server account name):<br>

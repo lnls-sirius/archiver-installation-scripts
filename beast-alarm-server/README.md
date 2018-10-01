@@ -1,7 +1,7 @@
-# Beast Alarm Server
+# BEAST Alarm Server
 Simplified installation guide.
 
-## Application
+## BEAST Alarm Server Application
 Based on <href>https://github.com/lnls-sirius/docker-alarm-server.git</href>.<br>
 Remember to set the correct values at `LNLS-CON.ini`.<br>
 Modify the hostnames according to your setup.
@@ -15,17 +15,46 @@ org.csstudio.alarm.beast/jms_url=failover:(tcp://alarm-server-activemq:61616)
 org.csstudio.platform.libs.epics/addr_list=10.0.6.49
 ...
 ```
+Run to build and install:
+``` 
+sudo ./install-beast.sh
+``` 
+
+To setup the sevices (Apache ActiveMQ and Postgresql are required.):
+``` 
+sudo make install-beast
+sudo systemctl status beast-notifier
+``` 
 
 ## Server notifier
 Based on <href>https://github.com/lnls-sirius/docker-alarm-server.git</href>.<br>
-Remember to set the correct values at `beast-alarm-server/LNLS-CON.ini`.
+Remember to set the correct values at `beast-alarm-server/LNLS-CON.ini` (the same config as the BEAST installation). 
 
-Run the script `install-notifier.sh`  then  `make install-alarm-notifier`.
+Run the script:
+```
+sudo install-notifier.sh
+``` 
+then to configure the services:
+```
+sudo make install-alarm-notifier
+sudo systemctl status alarm-notifier
+```
 
 ## Apache ActiveMQ
+Based on <href>https://github.com/lnls-sirius/docker-alarm-activemq.git</href><br>
+
 Apache ActiveMQ ™ is the most popular and powerful open source messaging and Integration Patterns server.<br>
 Apache ActiveMQ is fast, supports many Cross Language Clients and Protocols, comes with easy to use Enterprise Integration Patterns and many advanced features while fully supporting JMS 1.1 and J2EE 1.4.<br>
 Apache ActiveMQ is released under the Apache 2.0 License<br>
+
+Run the script:
+```
+sudo install-activemq.sh
+``` 
+The service shoud be created automatically:
+```
+sudo systemctl status activemq.service
+```
 
 One should use systemctl to manage this service.
 ```
@@ -34,9 +63,6 @@ sudo systemctl start activemq.service
 sudo systemctl stop activemq.service
 sudo systemctl enable activemq.service
 ```
-Based on <href>https://github.com/lnls-sirius/docker-alarm-activemq.git</href><br>
-
-
 
 ## Database configuration
 Based on <href>https://github.com/lnls-sirius/docker-alarm-postgres-db</href>.<br>

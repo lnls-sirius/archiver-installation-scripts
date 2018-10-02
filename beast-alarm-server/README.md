@@ -97,7 +97,6 @@ Create Database
 $ createdb ${POSTGRES_DB}
 ```
 
-
 Acces the postgres Shell
 ```
 psql ( enter the password for postgressql)
@@ -123,3 +122,21 @@ It's possible to alter the data location by changing the value of `data_director
 sudo nano /etc/postgresql/10/main/postgresql.conf
 ```
 By default it's set to `data_directory = '/var/lib/postgresql/10/main'`.
+
+
+It's necessary to check if the server is listening for connections from outside. Verify if the service is set to `localhost`:
+```
+sudo netstat -ae | grep tcp | grep LIST 
+```
+To allow outside connections edit the IPV4 entry:
+```
+nano /etc/postgresql/10/main/pg_hba.conf
+```
+
+Set the content to:
+```
+...
+# IPv4 local connections:
+host    all             all             0.0.0.0/0            md5
+...
+```

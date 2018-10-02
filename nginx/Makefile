@@ -3,9 +3,11 @@ PREFIX ?= /usr/local
 .PHONY: install uninstall install-ssl-cert
 
 install:
+	sudo cp -r main-page /opt/
 	sudo apt-get install nginx
 	sudo rm -f /etc/nginx/sites-enabled/default
 	sudo cp archiver-conf /etc/nginx/sites-enabled/archiver-conf
+	sudo cp -r main-page /opt
 	sudo nginx -t
 	sudo systemctl restart nginx.service
 

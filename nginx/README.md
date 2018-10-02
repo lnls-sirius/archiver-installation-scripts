@@ -24,3 +24,7 @@ To add a new user:<br>
 
 and to delete an existing user:<br>
 `sudo htpasswd -D /etc/nginx/.htpasswd username`<br>
+
+
+## Main window
+A simple static page using Bootstrap 4 and jQuery.

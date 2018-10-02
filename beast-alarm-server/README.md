@@ -124,19 +124,29 @@ sudo nano /etc/postgresql/10/main/postgresql.conf
 By default it's set to `data_directory = '/var/lib/postgresql/10/main'`.
 
 
-It's necessary to check if the server is listening for connections from outside. Verify if the service is set to `localhost`:
+Check if Postgresql is listening on <b>0.0.0.0</b> and <b>not</b> on <b>localhost</b>.
 ```
-sudo netstat -ae | grep tcp | grep LIST 
+sudo netstat -ae | grep tcp | grep LIST
 ```
 To allow outside connections edit the IPV4 entry:
+
+```
+sudo nano /etc/postgresql/10/main/postgresql.conf 
+```
+set the content to:
+```
+...
+listen_addresses = '*' 
+...
+```
+and append:
+```
+host    all             all              0.0.0.0/0                       md5
+host    all             all              ::/0                            md5
+```
+at the end of the file:
 ```
 nano /etc/postgresql/10/main/pg_hba.conf
 ```
-
-Set the content to:
-```
-...
-# IPv4 local connections:
-host    all             all             0.0.0.0/0            md5
-...
-```
+The `md5` option means is that a password must to be provided.<br>
+To allow connections without providing any password then change “md5” to “trust”.

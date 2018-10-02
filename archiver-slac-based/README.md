@@ -35,10 +35,11 @@ Short term storage should be a ram disk for optmal performance. One should use t
 /epics-archiver/storage/sts/ as an example: 
 
 Edit the file `/etc/fstab` in order do mount the partitions on boot. Remember to backup the original file in case something goes wrong.
-As an example here is a second hardrive and a tmpfs used on a testing appliance.
+As an example here is a second hardrive and a tmpfs used on a testing appliance. Use `ls -l /dev/disk/by-uuid` to find out the UUID.
+
 ```
-UUID=d9d94512-346b-4b1d-a59d-b8abf9bdbbdc /epics-archiver/storage/lts/ ext4    errors=remount-ro 0       1
-none                                 /epics-archiver/storage/sts/            tmpfs    defaults, size=20480              0       0
+UUID=31b4619a-5e8a-4874-9f68-1d20ae163481  /epics-archiver/storage/                ext4     errors=remount-ro        0       1
+none                                       /epics-archiver/storage/sts/            tmpfs    defaults, size=20480     0       0
 ```
 
 For testing purposes one can simply do: <br>
@@ -50,12 +51,6 @@ mount -t tmpfs -o size=20480m tmpfs /epics-archiver/storage/sts/
 ## Security Measures
 Usually only one instance of the Archiver Appliance will run. Assuming that is the case, for security reasons
 one should block the acces of the mgmt container (tomcat container) allowing only trusted IPs.<br>
-
-Check if Postgresql is listening on <b>0.0.0.0</b> and <b>not</b> on <b>localhost</b>.
-```
-sudo netstat -ae | grep tcp | grep LIST
-```
-
 
 For a simple setup where a reverse proxy server is running on the same machine as the appliance, a simple solution is to set the archiver ip to 
 `127.0.0.1` on the appliances.xml file ( `<mgmt_url>http://127.0.0.1:17665/mgmt/bpl</mgmt_url>` ), restrict the acces to the mgmt port, in this particular example `17665`, and reverse proxy to `127.0.0.1` with a secure connection, preferably using some sort of authentication(Remember to change `! --uid-owner controle` according to the server account name):<br>

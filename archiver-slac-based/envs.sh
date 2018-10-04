@@ -20,7 +20,7 @@ else
     export ARCHIVER_VIEWER_REPO="https://github.com/carneirofc/archiver-viewer.git"
 fi
 
-APPLIANCE_STORAGE_FOLDER=/epics-archiver/storage 
+APPLIANCE_STORAGE_FOLDER=/storage/epics-archiver 
 
 ARCHAPPL_SHORT_TERM_FOLDER=${APPLIANCE_STORAGE_FOLDER}/sts
 ARCHAPPL_MEDIUM_TERM_FOLDER=${APPLIANCE_STORAGE_FOLDER}/mts

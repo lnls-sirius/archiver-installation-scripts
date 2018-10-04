@@ -47,6 +47,15 @@ For testing purposes one can simply do: <br>
 mkdir /epics-archiver/storage/sts/
 mount -t tmpfs -o size=20480m tmpfs /epics-archiver/storage/sts/
 ```
+Usually for medium and long term storage multiple drivers will be used. The appliance must see all disks as a single directory in order to function.
+A simple RAID setup is enought to work. There are multiple ways of setting up a RAID config, all depends on current needs and hardware available.
+
+For a Supermicro machine, enter the bios, set the SATA mode to RAID and reboot.
+Press Ctrl+c to enter the RAID manangment utility at boot time.
+Create a new RAID volume if needed and add the necessary disks to the volume.
+In the current setup, we are running the operating system outside the RAID array in a SSD drive, so we keep it out of the RAID array.
+
+If everything goest
 
 ## Security Measures
 Usually only one instance of the Archiver Appliance will run. Assuming that is the case, for security reasons

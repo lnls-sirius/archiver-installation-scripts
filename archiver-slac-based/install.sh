@@ -1,6 +1,8 @@
 #!/bin/bash
 source envs.sh
-source zenity.sh
+
+sudo apt-get install dialog
+# yum install dialog
 
 function cleanup {      
         if [ -d extracted_files ]; then
@@ -16,39 +18,36 @@ cleanup
 mkdir -p resources
 
 MSG="Wish to download the required files?"
-echo ${MSG}
-zenity --text="${MSG}" --question --width=$W --height=150
+dialog --backtitle "Archiver configuration" --title "Configuration" --yesno "${MSG}" 10 60
 if [[ $? == 0 ]] ; then
-
 	pushd resources
-	wget ${TOMCAT_URL}
-	tar -zxf ${TOMCAT_DISTRIBUTION}.tar.gz
-	export TOMCAT_HOME=$(pwd)/${TOMCAT_DISTRIBUTION} 
-	wget https://dev.mysql.com/get/Downloads/Connector-J/${MYSQL_CONNECTOR}.tar.gz --no-check-certificate
-	tar -xvf ${MYSQL_CONNECTOR}.tar.gz
-	mv ${MYSQL_CONNECTOR}/${MYSQL_CONNECTOR}-bin.jar .
+                wget ${TOMCAT_URL}
+                tar -zxf ${TOMCAT_DISTRIBUTION}.tar.gz
+                export TOMCAT_HOME=$(pwd)/${TOMCAT_DISTRIBUTION} 
+                wget https://dev.mysql.com/get/Downloads/Connector-J/${MYSQL_CONNECTOR}.tar.gz --no-check-certificate
+                tar -xvf ${MYSQL_CONNECTOR}.tar.gz
+                mv ${MYSQL_CONNECTOR}/${MYSQL_CONNECTOR}-bin.jar .
 	popd 
 	
 	MSG="Wish to clone and build epicsappliances repo?"
-	echo ${MSG}
-	zenity --text="${MSG}" --question --width=$W --height=150
+        dialog --backtitle "Archiver configuration" --title "Configuration" --yesno "${MSG}" 10 60
+
 	if [[ $? == 0 ]] ; then
 	        pushd resources
-	        git clone ${ARCHIVER_REPO}
-	        cd epicsarchiverap
-	        ant
+                        git clone ${ARCHIVER_REPO}
+                        cd epicsarchiverap
+                        RES=$(dialog --stdout --menu 'Choose the tag to be used!' 0 0 0 $(git tag -l | awk '{printf "tags/%s %s\n", $1, $1}') master "Bleeding Edge")
+                        git checkout RES
+                        ant
 	        popd
 	fi
 fi
 
 MSG="Where is the epicsappliances build file (tar.gz)? Try the resources folder ..."
-echo $MSG
-ARCH_TAR=$(zenity  --title "$MSG" --file-selection --width=$W --height=150)
-if [[ ! -f ${ARCH_TAR} ]]
-then
+ARCH_TAR=$(dialog --stdout --title "$MSG" --fselect ${PWD} 14 60)
+if [[ ! -f ${ARCH_TAR} ]]; then
         MSG="${ARCH_TAR} does not seem to be a valid file"
-        echo ${MSG}
-        zenity --text="${MSG}" --error --width=$W --height=150
+	dialog --msgbox "${MSG}" 6 60
         exit 1
 fi
 
@@ -59,14 +58,11 @@ mkdir -p extracted_files/install_scripts
 
 cp -rf install_scripts/ extracted_files/
 export SCRIPTS_DIR=$(pwd)/extracted_files/install_scripts
-echo Scripts dir $SCRIPTS_DIR
 ls
 pushd ${SCRIPTS_DIR}
-ls 
-. ./single_machine_install.sh
+        ls 
+        . ./single_machine_install.sh
 popd  
-
-mv resources/${MYSQL_CONNECTOR}-bin.jar ${DEPLOY_DIR}
 
 STARTUP_SH=${DEPLOY_DIR}/sampleStartup.sh
 
@@ -98,21 +94,21 @@ do
                 cp -f redirect.html ${DEPLOY_DIR}/${APPLIANCE_UNIT}/webapps/retrieval/ui/redirect.html
 
                 pushd ${DEPLOY_DIR}/${APPLIANCE_UNIT}/webapps/retrieval/ui
-                rm -rvfd viewer
-                git clone ${ARCHIVER_VIEWER_REPO}
-                mv archiver-viewer viewer
-                mv viewer/index.html viewer/archViewer.html
-                pushd viewer/js
-                sed -i "s/10\.0\.4\.57\:11998/10\.0\.6\.51\:17668/g" archiver-viewer.min.js
-                sed -i "s/10\.0\.6\.57\:11998/10\.0\.6\.51\:17668/g" archiver-viewer.min.js
-                sed -i "s/10\.0\.4\.57\:11998/10\.0\.6\.51\:17668/g" archiver-viewer.js
-                sed -i "s/10\.0\.6\.57\:11998/10\.0\.6\.51\:17668/g" archiver-viewer.js
-                popd
+                        rm -rvfd viewer
+                        git clone ${ARCHIVER_VIEWER_REPO}
+                        mv archiver-viewer viewer
+                        mv viewer/index.html viewer/archViewer.html
+                        pushd viewer/js
+                                sed -i "s/10\.0\.4\.57\:11998/10\.0\.6\.51\:17668/g" archiver-viewer.min.js
+                                sed -i "s/10\.0\.6\.57\:11998/10\.0\.6\.51\:17668/g" archiver-viewer.min.js
+                                sed -i "s/10\.0\.4\.57\:11998/10\.0\.6\.51\:17668/g" archiver-viewer.js
+                                sed -i "s/10\.0\.6\.57\:11998/10\.0\.6\.51\:17668/g" archiver-viewer.js
+                        popd
                 popd
 
                 pushd ${DEPLOY_DIR}/${APPLIANCE_UNIT}/webapps/retrieval/WEB-INF/
-                xmlstarlet ed --inplace --subnode "/web-app" --type elem -n welcome-file-list -v "" web.xml
-                xmlstarlet ed --inplace --subnode "/web-app/welcome-file-list" --type elem -n welcome-file -v "/ui/redirect.html" web.xml
+                        xmlstarlet ed --inplace --subnode "/web-app" --type elem -n welcome-file-list -v "" web.xml
+                        xmlstarlet ed --inplace --subnode "/web-app/welcome-file-list" --type elem -n welcome-file -v "/ui/redirect.html" web.xml
                 popd
         fi
 done

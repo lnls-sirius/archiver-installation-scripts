@@ -1,5 +1,4 @@
 #!/bin/bash
-source envs.env
 
 if [ -d /opt/wait-for-it ]; then
     pushd /opt/wait-for-it

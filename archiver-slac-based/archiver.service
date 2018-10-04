@@ -9,7 +9,7 @@ RestartSec=5
 Type=forking
 WorkingDirectory=/epics-archiver/appliance
 ExecStart=/bin/bash /scripts/run-archiver.sh
-ExecStop=/bin/bash /scripts/sampleStartup.sh stop
+ExecStop=/bin/bash /epics-archiver/appliances/sampleStartup.sh stop
 StandardOutput=syslog
 StandardError=syslog
 

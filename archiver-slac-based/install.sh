@@ -18,7 +18,7 @@ cleanup
 mkdir -p resources
 
 MSG="Wish to download the required files?"
-dialog --backtitle "Archiver configuration" --title "Configuration" --yesno "${MSG}" 10 60
+dialog --backtitle "Archiver configuration" --title "Configuration" --yesno "${MSG}" 0 0 
 if [[ $? == 0 ]] ; then
 	pushd resources
                 wget ${TOMCAT_URL}
@@ -30,8 +30,7 @@ if [[ $? == 0 ]] ; then
 	popd 
 	
 	MSG="Wish to clone and build epicsappliances repo?"
-        dialog --backtitle "Archiver configuration" --title "Configuration" --yesno "${MSG}" 10 60
-
+        dialog --backtitle "Archiver configuration" --title "Configuration" --yesno "${MSG}" 0 0 
 	if [[ $? == 0 ]] ; then
 	        pushd resources
                         git clone ${ARCHIVER_REPO}
@@ -40,14 +39,20 @@ if [[ $? == 0 ]] ; then
                         git checkout RES
                         ant
 	        popd
+        else
+                MSG="Downloading appliance from ${COMPILED_ARCHIVER_APPL} ..."
+	        dialog --msgbox "${MSG}" 0 0 
+                wget $COMPILED_ARCHIVER_APPL --no-check-certificate
+                MSG="Download complete ! \n"$(ls)
+	        dialog --msgbox "${MSG}" 0 0 
 	fi
 fi
 
 MSG="Where is the epicsappliances build file (tar.gz)? Try the resources folder ..."
-ARCH_TAR=$(dialog --stdout --title "$MSG" --fselect ${PWD} 14 60)
+ARCH_TAR=$(dialog --stdout --title "$MSG" --fselect ${PWD} 0 0 )
 if [[ ! -f ${ARCH_TAR} ]]; then
         MSG="${ARCH_TAR} does not seem to be a valid file"
-	dialog --msgbox "${MSG}" 6 60
+	dialog --msgbox "${MSG}" 0 0 
         exit 1
 fi
 

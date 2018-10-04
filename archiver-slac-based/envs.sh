@@ -1,4 +1,5 @@
 #!/bin/bash
+COMPILED_ARCHIVER_APPL="https://github.com/slacmshankar/epicsarchiverap/releases/download/v0.0.1_SNAPSHOT_22-June-2017/archappl_v0.0.1_SNAPSHOT_22-June-2017T14-44-56.tar.gz"
 
 export APPLIANCE_ADDRESS="127.0.0.1"
 export ARCHAPPL_MYIDENTITY="lnls_appliance_1"

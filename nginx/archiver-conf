@@ -44,6 +44,12 @@ server {
         expires max;
         add_header Cache-Control public;
     }
+    location /main-page/imgs/ {
+        alias /opt/main-page/imgs/;
+        gzip_static on;
+        expires max;
+        add_header Cache-Control public;
+    }
     
     location /archiver/ {
         auth_basic_user_file                  /etc/nginx/.htpasswd;

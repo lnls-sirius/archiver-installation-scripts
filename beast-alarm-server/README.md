@@ -1,6 +1,43 @@
 # BEAST Alarm Server
 Simplified installation guide.
 
+A recommended installation order:
+```
+# Don't run it yet.
+./install-beast.sh
+
+./install-activemq.sh
+
+# Note that the PostgreSQL installation is manual. This installation script only downloads the required files.
+# Check "Database Configuration" bellow for further instructions.
+./install-postgresql.sh
+
+./install-notifier.sh
+```
+
+After the installation process, start the services:
+```
+# This service is created automatically.
+postgresql.service - PostgreSQL RDBMS
+
+# This service is created automatically.
+activemq.service - LSB: ActiveMQ instance
+
+make install-beast 
+beast.service - BEAST Alarm Server
+
+make install-alarm-notifier
+alarm-notifier.service - Alarm Notifier
+```
+
+
+DEBUG-Check the existence of the following files:
+```
+ls /scripts/
+activemq.env  alarm-notifier.env  beast.env  run-alarm-notifier.sh  run-beast.sh
+```
+
+
 ## BEAST Alarm Server Application
 Based on <href>https://github.com/lnls-sirius/docker-alarm-server.git</href>.<br>
 Remember to set the correct values at `LNLS-CON.ini`.<br>

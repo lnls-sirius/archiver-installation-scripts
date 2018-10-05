@@ -3,49 +3,95 @@ Based on the installation script provided by <href>https://github.com/slacmshank
 Make sure to have an `envs.env` file at `/opt`. View the example file on this project for a refference implementation.<br>
 It's needed to have MySql running with the user and database already created.
 
+The EPICS Appliance consists of 4 Java applications, each running in a separated Tomcat instance.
+
+## MySQL Setup
+```
+CREATE DATABASE 'database_name';
+USE 'database_name';
+CREATE USER 'user';
+GRANT ALL PRIVILEGES ON 'database_name'.* To 'user' IDENTIFIED BY 'password';
+```
+Now copy and paste :
+```
+CREATE TABLE PVTypeInfo ( 
+	pvName VARCHAR(255) NOT NULL PRIMARY KEY,
+	typeInfoJSON MEDIUMTEXT NOT NULL,
+	last_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE PVAliases ( 
+	pvName VARCHAR(255) NOT NULL PRIMARY KEY,
+	realName VARCHAR(256) NOT NULL,
+	last_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE ArchivePVRequests ( 
+	pvName VARCHAR(255) NOT NULL PRIMARY KEY,
+	userParams MEDIUMTEXT NOT NULL,
+	last_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE ExternalDataServers ( 
+	serverid VARCHAR(255) NOT NULL PRIMARY KEY,
+	serverinfo MEDIUMTEXT NOT NULL,
+	last_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+```
+
+To load an appliance dump:<br>
+<b>Beware that the current data could be erased. Always check the sql you're runnig !</b>
+```
+mysql -u 'user' -p 'database_name' < 'dump.sql'
+```
+
+
 ## Installing
 
 Before installing the archiver service, the user might want to change some variables at `envs.env`, for example :
 ```
 ...
 export APPLIANCE_ADDRESS="127.0.0.1"
-export ARCHAPPL_MYIDENTITY="lnls_appliance_1"
+export ARCHAPPL_MYIDENTITY="lnls_control_appliance_1"
 export APPLIANCES_NAME="lnls_appliances.xml"
 export POLICIES_NAME="lnls_policies.py"
 ...
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
 ...
-#export JAVA_OPTS=-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap # Use when inside a docker container
-export JAVA_OPTS="-XX:MaxPermSize=128M -XX:+UseG1GC -Xmx8G -Xms8G -ea"
+export JAVA_OPTS=-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap # Use when inside a docker container
 ...
 APPLIANCE_STORAGE_FOLDER=/epics-archiver/storage 
 ...
 ```
 
+
 After configuring all the necessary items, run:
 ```
 ./install.sh
 ```
-A temporary folder called <b>resources</b> will be created inside this folder during the installation process. All downloaded files will go there.
-Pay attention on the messages that will prompt and select the corresponding files. <i>A fully automated installation is under development alogside it's container counterpart</i>.
+A temporary folder called <b>resources</b> will be created inside this folder during the installation process.<br>
+All downloaded files will go there.Pay attention on the messages that will prompt and select the corresponding files.<br>
+<i>A fully automated installation is under development alogside it's container counterpart</i>.
+
+It's recommended to download the compiled archiver vesion.
 
 
 ## Storage
 Short term storage should be a ram disk for optmal performance. One should use tempfs and specify the size limit according to the system setup.
-/epics-archiver/storage/sts/ as an example: 
+/storage/epics-archiver/sts/ as an example: 
 
 Edit the file `/etc/fstab` in order do mount the partitions on boot. Remember to backup the original file in case something goes wrong.
 As an example here is a second hardrive and a tmpfs used on a testing appliance. Use `ls -l /dev/disk/by-uuid` to find out the UUID.
 
 ```
-UUID=31b4619a-5e8a-4874-9f68-1d20ae163481  /epics-archiver/storage/                ext4     errors=remount-ro        0       1
-none                                       /epics-archiver/storage/sts/            tmpfs    defaults, size=20480     0       0
+UUID=31b4619a-5e8a-4874-9f68-1d20ae163481  /storage/epics-archiver/                ext4     errors=remount-ro        0       1
+none                                       /storage/epics-archiver/sts/            tmpfs    defaults, size=20480     0       0
 ```
 
 For testing purposes one can simply do: <br>
 ```
-mkdir /epics-archiver/storage/sts/
-mount -t tmpfs -o size=20480m tmpfs /epics-archiver/storage/sts/
+mkdir /storage/epics-archiver/sts/
+mount -t tmpfs -o size=2048m tmpfs /storage/epics-archiver/sts/
 ```
 Usually for medium and long term storage multiple drivers will be used. The appliance must see all disks as a single directory in order to function.
 A simple RAID setup is enought to work. There are multiple ways of setting up a RAID config, all depends on current needs and hardware available.
@@ -75,19 +121,4 @@ To view the configured rules:<br>
 
 To persist the iptables rules after reboot, run dpkg-reconfigure and respond Yes when prompted.<br>
 `dpkg-reconfigure iptables-persistent`
-
-<!-- ### Iptables logging
-```
-iptables -N LOGGING
-iptables -A INPUT -j LOGGING
-iptables -A OUTPUT -j LOGGING
-iptables -A LOGGING -m limit --limit 2/min -j LOG --log-prefix "IPTables-Dropped: " --log-level 4
-iptables -A LOGGING -j DROP
-```
-<ul>
-<li>`iptables -N LOGGING`: Create a new chain called LOGGING.</li>
-<li>`iptables -A INPUT -j LOGGING`: All the remaining incoming packets will jump to the LOGGING chain.</li>
-<li>line#3: Log the incoming packets to syslog (/var/log/messages).</li>
-<li>`iptables -A LOGGING -j DROP`: Finally, drop all the packets that came to the LOGGING chain. i.e now it really drops the incoming packets.</li>
-<ul>
-  -->
+ 

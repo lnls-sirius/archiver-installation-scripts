@@ -1,7 +1,8 @@
 #!/bin/bash
+COMPILED_ARCHIVER_APPL="https://github.com/slacmshankar/epicsarchiverap/releases/download/v0.0.1_SNAPSHOT_22-June-2017/archappl_v0.0.1_SNAPSHOT_22-June-2017T14-44-56.tar.gz"
 
 export APPLIANCE_ADDRESS="127.0.0.1"
-export ARCHAPPL_MYIDENTITY="lnls_appliance_1"
+export ARCHAPPL_MYIDENTITY="lnls_control_appliance_1"
 export APPLIANCES_NAME="lnls_appliances.xml"
 export POLICIES_NAME="lnls_policies.py"
 
@@ -9,8 +10,8 @@ ARCH='x86_64'
 
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
 # # Use this if runnig inside a  Docker container
-#export JAVA_OPTS=-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
-export JAVA_OPTS="-XX:MaxPermSize=128M -XX:+UseG1GC -Xmx8G -Xms8G -ea"
+export JAVA_OPTS=-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
+#export JAVA_OPTS="-XX:MaxPermSize=128M -XX:+UseG1GC -Xmx8G -Xms8G -ea"
 export PATH=${JAVA_HOME}/bin:$PATH
 
 VIEWER_DEV=false

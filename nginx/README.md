@@ -28,3 +28,7 @@ and to delete an existing user:<br>
 
 ## Main window
 A simple static page using Bootstrap 4 and jQuery.
+
+## Archiver Viewer
+The distribution files are'nt supposed to be here but as I don't have access to the github repo ...
+<href>https://github.com/lnls-sirius/archiver-viewer</href>

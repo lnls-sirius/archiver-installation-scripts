@@ -4,6 +4,7 @@ PREFIX ?= /usr/local
 
 install:
 	sudo cp -r main-page /opt/
+	sudo cp -r archiver-viewer /opt/
 	sudo apt-get install nginx
 	sudo rm -f /etc/nginx/sites-enabled/default
 	sudo cp archiver-conf /etc/nginx/sites-enabled/archiver-conf
